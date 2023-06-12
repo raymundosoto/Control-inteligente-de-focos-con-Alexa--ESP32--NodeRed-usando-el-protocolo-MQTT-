@@ -1,0 +1,304 @@
+[
+    {
+        "id": "be7d68837f5551da",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ba63caa2a67d0660",
+        "type": "mqtt out",
+        "z": "be7d68837f5551da",
+        "name": "",
+        "topic": "esp32/relay/foco",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2136c7aa02a4db16",
+        "x": 780,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cecab9644bb50f38",
+        "type": "inject",
+        "z": "be7d68837f5551da",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 440,
+        "y": 260,
+        "wires": [
+            [
+                "ba63caa2a67d0660",
+                "890c0ebe19de7131"
+            ]
+        ]
+    },
+    {
+        "id": "890c0ebe19de7131",
+        "type": "debug",
+        "z": "be7d68837f5551da",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b94695fac2501dec",
+        "type": "telegram receiver",
+        "z": "be7d68837f5551da",
+        "name": "",
+        "bot": "b4f1919039f67485",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 210,
+        "y": 420,
+        "wires": [
+            [
+                "42770b9208e529af"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "42770b9208e529af",
+        "type": "function",
+        "z": "be7d68837f5551da",
+        "name": "mensaje recibido",
+        "func": "if (msg.payload.content == \"encender\" || msg.payload.content == \"Encender\") {\n    msg.payload = {};\n    msg.payload.chatId = -701801339;\n    msg.payload.type = 'message';\n    msg.payload.content =  \"true\";\n    return msg;\n}\n\nelse if (msg.payload.content == \"apagar\" || msg.payload.content == \"Apagar\") {\n\n    msg.payload = {};\n    msg.payload.chatId = -701801339;\n    msg.payload.type = 'message';\n    msg.payload.content = \"false\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 420,
+        "wires": [
+            [
+                "d337928a770f2657"
+            ]
+        ]
+    },
+    {
+        "id": "d337928a770f2657",
+        "type": "function",
+        "z": "be7d68837f5551da",
+        "name": "Encender o apagar",
+        "func": "//msg.topic = msg.payload.id;\nmsg.payload = msg.payload.content;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 420,
+        "wires": [
+            [
+                "895b6856f02fc56a",
+                "ba63caa2a67d0660",
+                "890c0ebe19de7131"
+            ]
+        ]
+    },
+    {
+        "id": "a2f2266ecfe6d697",
+        "type": "telegram sender",
+        "z": "be7d68837f5551da",
+        "name": "",
+        "bot": "b4f1919039f67485",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1070,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "895b6856f02fc56a",
+        "type": "function",
+        "z": "be7d68837f5551da",
+        "name": "Acción realizada",
+        "func": "\nif (msg.payload== \"true\") {\n\n    msg.payload = {};\n    msg.payload.chatId = -701801339;\n    msg.payload.type = \"message\";\n    var espacio = \" \\n\";\n    msg.payload.content = \"Se encendió el foco\"\n    \n    return msg;\n\n} else {\n    msg.payload = {};\n    msg.payload.chatId = -701801339;\n    msg.payload.type = \"message\";\n    var espacio = \" \\n\";\n    msg.payload.content = \"Se apagó el foco\";\n    return msg;\n\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n//if (msg.payload.content == \"true\") {\n//    msg.payload = {};\n//    msg.payload.chatId = -701801339, 5394149901;\n//    msg.payload.type = 'message';\n//    msg.payload.content =  \"Se encendió el foco\";\n//    return msg;\n//}\n\n//else if (msg.payload.content == \"false\") {\n\n//    msg.payload = {};\n//    msg.payload.chatId = -701801339, 5394149901;\n//    msg.payload.type = 'message';\n//    msg.payload.content = \"Se apagó el foco\";\n//    return msg;\n//}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 420,
+        "wires": [
+            [
+                "a2f2266ecfe6d697",
+                "890c0ebe19de7131"
+            ]
+        ]
+    },
+    {
+        "id": "a79dd9886cd34aa1",
+        "type": "alexa-home",
+        "z": "be7d68837f5551da",
+        "conf": "f310144833203a64",
+        "device": "190881",
+        "acknoledge": true,
+        "name": "",
+        "topic": "esp32/relay/foco",
+        "x": 350,
+        "y": 540,
+        "wires": [
+            [
+                "5a6a3812a71ebeb8",
+                "ba63caa2a67d0660"
+            ]
+        ]
+    },
+    {
+        "id": "5a6a3812a71ebeb8",
+        "type": "debug",
+        "z": "be7d68837f5551da",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5a1b19c3f32873f3",
+        "type": "mqtt in",
+        "z": "be7d68837f5551da",
+        "name": "",
+        "topic": "esp32/relay/foco",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "48109835b69c2135",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 480,
+        "y": 600,
+        "wires": [
+            [
+                "5a6a3812a71ebeb8"
+            ]
+        ]
+    },
+    {
+        "id": "2136c7aa02a4db16",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b4f1919039f67485",
+        "type": "telegram bot",
+        "botname": "relay_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "f310144833203a64",
+        "type": "alexa-home-conf",
+        "username": "raymundo_nr"
+    },
+    {
+        "id": "48109835b69c2135",
+        "type": "mqtt-broker",
+        "name": "DHT_11",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
